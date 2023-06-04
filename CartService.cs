@@ -44,11 +44,16 @@ public class CartService
 
     public Order CreateOrder()
     {
+        if (!_itens.Any())
+            return null;
+
         var order = new Order(
             itens: _itens);
         
         _orders.Add(order);
-
+        
+        _itens.Clear();
+        
         return order;
     }
 
