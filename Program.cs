@@ -14,15 +14,28 @@ var cartService = new CartService();
 
 app.MapGet("/", () => "It's running!");
 
-app.MapGet("get-cart-itens", () => Results.Ok(cartService.Get()));
+#region Cart
 
-app.MapDelete("delete-cart-item/{productId}", (int productId) =>
-    Results.Accepted("delete-cart-item", cartService.Remove(productId)));
+app.MapGet("/cart/get-cart-itens", () => Results.Ok(cartService.GetCartItens()));
 
-app.MapPost("/add-to-cart", (Product product) =>
+app.MapDelete("/cart/delete-cart-item/{productId}", (int productId) =>
+    Results.Accepted("/cart/delete-cart-item", cartService.RemoveCartItem(productId)));
+
+app.MapPost("/cart/add-to-cart", (Product product) =>
 {
-    cartService.Add(product);
-    return Results.Created("/add-to-cart", product);
+    cartService.AddCartItem(product);
+    return Results.Created("/cart/add-to-cart", product);
 });
+
+#endregion
+
+#region Orders
+
+app.MapGet("/order/get-orders", () => Results.Ok(cartService.GetOrders()));
+
+app.MapPost("/order/create-order", () => 
+    Results.Created("/order/create-order", cartService.CreateOrder()));
+
+#endregion
 
 app.Run();

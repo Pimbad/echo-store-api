@@ -2,9 +2,10 @@ namespace echo_store_api;
 
 public class CartService
 {
+    private static readonly IList<Order> _orders = new List<Order>();
     private static readonly IList<CartItem> _itens = new List<CartItem>();
 
-    public bool Add(Product product)
+    public bool AddCartItem(Product product)
     {
         var exists = _itens.Any(query => query.Product.Id == product.Id);
 
@@ -26,7 +27,7 @@ public class CartService
         return true;
     }
 
-    public bool Remove(int productId)
+    public bool RemoveCartItem(int productId)
     {
         var product = _itens.FirstOrDefault(query => query.Product.Id == productId);
         _itens.Remove(product);
@@ -34,6 +35,19 @@ public class CartService
         return true;
     }
 
-    public IList<CartItem> Get()
+    public IList<CartItem> GetCartItens()
         => _itens;
+
+    public Order CreateOrder()
+    {
+        var order = new Order(
+            itens: _itens);
+        
+        _orders.Add(order);
+
+        return order;
+    }
+
+    public IList<Order> GetOrders()
+        => _orders;
 }
