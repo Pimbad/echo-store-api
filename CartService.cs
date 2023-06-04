@@ -30,7 +30,11 @@ public class CartService
     public bool RemoveCartItem(int productId)
     {
         var product = _itens.FirstOrDefault(query => query.Product.Id == productId);
-        _itens.Remove(product);
+
+        if (product?.Count > 1)
+            _itens[_itens.IndexOf(product)].Count--;
+        else
+            _itens.Remove(product);
 
         return true;
     }
