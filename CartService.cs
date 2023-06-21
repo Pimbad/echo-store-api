@@ -47,8 +47,11 @@ public class CartService
         if (!_itens.Any())
             return null;
 
+        var itens = new List<CartItem>();
+        itens.AddRange(_itens);
+            
         var order = new Order(
-            itens: _itens);
+            itens: itens);
         
         _orders.Add(order);
         
@@ -58,5 +61,6 @@ public class CartService
     }
 
     public IList<Order> GetOrders()
-        => _orders;
+        => _orders.OrderBy(order => order.CreatedAt)
+            .ToList();
 }
